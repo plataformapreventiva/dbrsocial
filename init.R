@@ -7,7 +7,8 @@ install_package <- function(package) {
   }
 }
 
-packages <- c("devtools", "roxygen2", "testthat", "knitr")
+packages <- c("devtools", "roxygen2", "testthat", "knitr",
+              "RPostgreSQL","dplyr","dbplyr")
 
 lapply(packages, install_package);
 
