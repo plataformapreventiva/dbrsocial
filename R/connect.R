@@ -17,7 +17,7 @@ prev_connect <- function(){
   dbname   =  Sys.getenv("PGDATABASE"))
 }
 
-load_table <- function(connection,schema,the_table,the_query="SELECT * FROM %s.%s"){
+load_table <- function(connection,schema,the_table){
     #' @title load_table
     #'
     #' @description This function loads a connection to
@@ -31,6 +31,7 @@ load_table <- function(connection,schema,the_table,the_query="SELECT * FROM %s.%
     #' @param the_table. An existing table in the given schema.
     #'
     #' @param the_dic<-load_table(con,raw,sifode_dic)
+    the_query <- "SELECT * FROM %s.%s"
     schema    <- deparse(substitute(schema))
     the_table <- deparse(substitute(the_table))
     initial <- RPostgreSQL::dbSendQuery(connection,
