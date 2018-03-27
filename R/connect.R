@@ -30,10 +30,23 @@ load_table <- function(connection,schema,the_table){
     #' connected database.
     #' @param the_table. An existing table in the given schema.
     #'
-    #' @param the_dic<-load_table(con,raw,sifode_dic)
+    #' @examples the_dic<-load_table(con,raw,sifode_dic)
     the_query <- "SELECT * FROM %s.%s"
     schema    <- deparse(substitute(schema))
     the_table <- deparse(substitute(the_table))
     initial <- RPostgreSQL::dbSendQuery(connection,
                              sprintf(the_query,schema,the_table))
+}
+
+discon_db <- function(connection){
+    #' @title discon_db
+    #'
+    #' @description This function disconnects a PostgreSQL
+    #' connection.
+    #'
+    #' @param connection DBI connection. A connection to a database must be open and given.
+    #'
+    #' @examples con <- prev_connect()
+    #' discon_db(con)
+	RPostgreSQL::dbDisconnect(connection)
 }
