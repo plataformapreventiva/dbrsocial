@@ -9,6 +9,7 @@ Imports: devtools,
   dbplyr,
   dbi,
   RPostgreSQL
+Suggests: testthat
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
