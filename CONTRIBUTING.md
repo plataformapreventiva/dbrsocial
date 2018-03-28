@@ -93,24 +93,3 @@ Indicate:
 1. Erase branch
 2. Squash commits
 
-
-### Warnings
-
-### Run Queries Safely
-When creating a function we should be careful with SQL injection attacks, 
-to avoid them, when queries depend on user input avoid using
-`paste0` to create SQL commands (`dbGetQuery()`), instead consider:
-
-1. Use a parameterised query with dbSendQuery() and dbBind():
-  * When using PostgreSQL placeholders syntax uses `$` and a number indicating 
-  the parameter(s) `$1, $2, ...`.
-
-2. Use the sqlInterpolate() function to safely combine a SQL string with data
-
-3. Manually escape the inputs using dbQuoteString()
-
-One shall use option 1 whenever possible, then option 2 and finally option 3,
-for they are ordered by level of safety.
-
-Further explanation can be found in the [Run Queries Safely](https://db.rstudio.com/best-practices/run-queries-safely/) section of
-RStudio Databases using R site
