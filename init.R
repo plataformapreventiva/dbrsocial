@@ -8,10 +8,12 @@ install_package <- function(package) {
 }
 
 packages <- c("devtools", "roxygen2", "testthat", "knitr",
-              "RPostgreSQL","dplyr","dbplyr")
+              "RPostgreSQL","dplyr","dbplyr", "testthat")
 
 lapply(packages, install_package);
 
 devtools::install_github("hadley/devtools")
 
 devtools::create_package("route/here/predictivadbr")
+
+usethis::use_testthat()
