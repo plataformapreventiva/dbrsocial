@@ -48,5 +48,5 @@ discon_db <- function(connection){
     #'
     #' @examples con <- prev_connect()
     #' discon_db(con)
-	RPostgreSQL::dbDisconnect(connection)
+    RPostgreSQL::dbDisconnect(connection)
 }
