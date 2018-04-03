@@ -1,10 +1,12 @@
 Package: dbconnection
 Title: Connection to the preventivadb
 Version: 0.0.0.1
-Authors@R: person("Teresa", "Ortiz", email = "mortiz@conabio.gob.mx", role = c("aut", "cre")),
-person("Ollin", "Langle", email="ollin.langle@ciencias.unam.mx",role=c("ctb"))
+Authors@R: c(
+  person("Teresa", "Ortiz", email = "mortiz@conabio.gob.mx", role = c("aut", "cre")),
+  person("Ollin", "Langle", email="ollin.langle@ciencias.unam.mx",role=c("ctb")))
 Description: This package gives a set of tools to connect and interact with the preventivadb.
 Depends: R (>= 3.4.3)
+RoxygenNote: 6.0.1
 Imports: devtools,
   dplyr,
   dbplyr,
@@ -16,3 +18,4 @@ rmarkdown
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder: knitr
