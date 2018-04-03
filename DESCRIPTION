@@ -13,8 +13,8 @@ Imports: devtools,
   dbi,
   RPostgreSQL
 Suggests: testthat,
-  knitr
-rmarkdown
+  knitr,
+  rmarkdown
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
