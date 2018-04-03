@@ -13,7 +13,7 @@ Imports: devtools,
   dbi,
   RPostgreSQL
 Suggests: testthat,
-knitr,
+  knitr
 rmarkdown
 License: What license is it under?
 Encoding: UTF-8
