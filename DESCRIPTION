@@ -12,8 +12,8 @@ Imports: devtools,
   dbplyr,
   dbi,
   RPostgreSQL
-Suggests: testthat,
-  knitr,
+Suggests: knitr,
+  testthat,
   rmarkdown
 License: What license is it under?
 Encoding: UTF-8
