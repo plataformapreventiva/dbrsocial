@@ -26,3 +26,6 @@ vignettes/*.pdf
 .Rproj.user
 # ENV variables file
 .env
+
+#original files
+*.orig

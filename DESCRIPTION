@@ -10,6 +10,7 @@ RoxygenNote: 6.0.1
 Imports: devtools,
   dplyr,
   dbplyr,
+  DBI,
   RPostgreSQL
 Suggests: knitr,
   testthat,
