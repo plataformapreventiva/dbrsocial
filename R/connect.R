@@ -79,9 +79,11 @@ clear_results <- function(connection){
 #'   random generator in Postgres backend.
 #' @importFrom magrittr %>%
 #'
+#' @param lim int. A limit for SQL lines to return.
+#'
 #' @examples sample_table(con,0.01,1234,raw,cuis_historico_domicilios)
 #' @export
-sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table,lim=0){
+sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, lim=0){
     the_table <- deparse(substitute(the_table))
     schema <-  deparse(substitute(schema))
     if (lim==0){
