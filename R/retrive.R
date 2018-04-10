@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+
 #' @title sample_table
 #'
 #' @description Random Sample of any given table and schema.
@@ -33,4 +34,16 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
     DBI::dbClearResult(sample_query)
     return(the_sample)
     }
+}
+
+#' @title retrive_result
+#'
+#' @description Return the fetch results of a query
+#' @param query An exec unfetched query
+#'
+#' @examples sample_table(load_table(prev_connect(),raw,sifode))
+#' @export
+retrive_result <- function(query){
+    the_table <- DBI::dbFetch(query)
+    return(the_table)
 }
