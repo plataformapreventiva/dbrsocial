@@ -21,7 +21,7 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
     if (lim==0){
     query  <-  "SELECT * FROM %s.%s tablesample bernoulli($1) repeatable($2)"
     the_query <- sprintf(query,schema,the_table)
-    sample_query <- RPostgreSQL::postgresqlExecStatement(con,the_query,c(p,seed))
+    sample_query <- RPostgreSQL::postgresqlExecStatement(connection,the_query,c(p,seed))
     the_sample <- DBI::dbFetch(sample_query)
     DBI::dbClearResult(sample_query)
     return(the_sample)
@@ -29,7 +29,7 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
     else{
     query  <-  "SELECT * FROM %s.%s tablesample bernoulli($1) repeatable($2) limit ($3)"
     the_query <- sprintf(query,schema,the_table)
-    sample_query <- RPostgreSQL::postgresqlExecStatement(con,the_query,c(p,seed,lim))
+    sample_query <- RPostgreSQL::postgresqlExecStatement(connection,the_query,c(p,seed,lim))
     the_sample <- DBI::dbFetch(sample_query)
     DBI::dbClearResult(sample_query)
     return(the_sample)
