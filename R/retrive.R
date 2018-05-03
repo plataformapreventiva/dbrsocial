@@ -36,6 +36,34 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
     }
 }
 
+
+# cuis_raw_sample <- function(con, p = 0.01, seed = 1234){
+#     domicilios_sample_query <- DBI::dbSendQuery(con, "select * from
+#         raw.cuis_historico_domicilios tablesample bernoulli($1) repeatable($2)")
+#     DBI::dbBind(domicilios_sample_query, list(p, seed))
+#     domicilios_sample <- DBI::dbFetch(domicilios_sample_query)
+#     DBI::dbClearResult(domicilios_sample_query)
+#     cuis_table <- dplyr::tbl(con, dbplyr::in_schema("raw", "cuis_39_9"))
+#     cuis_sample <- cuis_table %>%
+#         dplyr::select(-actualizacion_sedesol, -data_date) %>%
+#         dplyr::filter(llave_hogar_h %in% domicilios_sample$llave_hogar_h) %>%
+#         dplyr::collect()
+#     return(cuis_sample)
+# }
+
+# cuist_table %>% dplyr::select(llave_hogar_h) %>% dplyr::tbl_df() %in% domicilios_sample$llave_hogar_h
+
+cross_tables <- function(table_1, table_2, key_1, key_2){
+    key_1 <- deparse(substitute(key_1))
+    key_2 <- (substitute(key_2))
+    where <- table_1[,key_1]
+    in_tables <- table_2 %>%
+        dplyr::tbl_df() %>%
+        dplyr::select(key_2 %in% table_1[[key_1]] ) %>%
+        dplyr::collect()
+    return(in_tables)
+}
+
 #' @title retrive_result
 #'
 #' @description Return the fetch results of a query

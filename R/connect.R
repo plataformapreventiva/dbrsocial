@@ -40,7 +40,6 @@ load_table <- function(connection,schema,the_table){
                              sprintf(the_query,schema,the_table))
 }
 
-
 #' @title large_table
 #'
 #' @description This function loads a connection to a large table without
