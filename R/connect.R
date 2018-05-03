@@ -51,7 +51,7 @@ load_table <- function(connection,schema,the_table){
 #' connected database.
 #' @param the_table. An existing table in the given schema.
 #'
-#' @examples cuis_table <- load_table(con,raw,cuis_39_9)
+#' @examples cuis_table <- large_table(con,raw,cuis_39_9)
 #' @export
 large_table <- function(connection,schema,the_table){
     schema    <- deparse(substitute(schema))

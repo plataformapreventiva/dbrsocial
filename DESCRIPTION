@@ -11,7 +11,8 @@ Imports: devtools,
   dplyr,
   dbplyr,
   DBI,
-  RPostgreSQL
+  RPostgreSQL,
+  chunked
 Suggests: knitr,
   testthat,
   rmarkdown
