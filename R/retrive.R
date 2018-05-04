@@ -37,22 +37,16 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
 }
 
 
-# cuis_raw_sample <- function(con, p = 0.01, seed = 1234){
-#     domicilios_sample_query <- DBI::dbSendQuery(con, "select * from
-#         raw.cuis_historico_domicilios tablesample bernoulli($1) repeatable($2)")
-#     DBI::dbBind(domicilios_sample_query, list(p, seed))
-#     domicilios_sample <- DBI::dbFetch(domicilios_sample_query)
-#     DBI::dbClearResult(domicilios_sample_query)
-#     cuis_table <- dplyr::tbl(con, dbplyr::in_schema("raw", "cuis_39_9"))
-#     cuis_sample <- cuis_table %>%
-#         dplyr::select(-actualizacion_sedesol, -data_date) %>%
-#         dplyr::filter(llave_hogar_h %in% domicilios_sample$llave_hogar_h) %>%
-#         dplyr::collect()
-#     return(cuis_sample)
-# }
-
-# cuist_table %>% dplyr::select(llave_hogar_h) %>% dplyr::tbl_df() %in% domicilios_sample$llave_hogar_h
-
+#' @title cross_tables
+#'
+#' @description Returns a match between two tbl by defined key
+#' @param table_1 a tbl-like object
+#' @param table_2 a tbl-like object
+#' @param key_1 the column name from table_1 to compare
+#' @param key_2 the column name from table_2 to compare
+#'
+#' @examples cross_tables(domicilios_sample_query,cuis_sample,llave_hogar_h,llave_hogar_h)
+#' @export
 cross_tables <- function(table_1, table_2, key_1, key_2){
     key_1 <- deparse(substitute(key_1))
     key_2 <- (substitute(key_2))
@@ -71,7 +65,7 @@ cross_tables <- function(table_1, table_2, key_1, key_2){
 #'
 #' @examples sample_table(load_table(prev_connect(),raw,sifode))
 #' @export
-retrive_result <- function(query){
-    the_table <- DBI::dbFetch(query)
+retrive_result <- function(query,n){
+    the_table <- DBI::dbFetch(query,n)
     return(the_table)
 }
