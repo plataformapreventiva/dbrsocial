@@ -1,6 +1,6 @@
-#' Sample CUIS raw table
+#' @title Sample CUIS raw table
 #'
-#' Random Sample of CUIS table on the raw schema.
+#' @description Random Sample of CUIS table on the raw schema.
 #' @param con a DBIConnection object to Postgres predictiva data base, as
 #'   returned by \code{\link[DBI]{dbConnect}}.
 #' @param p Sample size as proportion of the total number of households

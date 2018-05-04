@@ -40,6 +40,26 @@ load_table <- function(connection,schema,the_table){
                              sprintf(the_query,schema,the_table))
 }
 
+#' @title large_table
+#'
+#' @description This function loads a connection to a large table without
+#' loading it to memory.
+#'
+#' @param connection DBI connection. A connection to a database
+#' must be open and given.
+#' @param schema variable. A valid schema from a database on the
+#' connected database.
+#' @param the_table. An existing table in the given schema.
+#'
+#' @examples cuis_table <- large_table(con,raw,cuis_39_9)
+#' @export
+large_table <- function(connection,schema,the_table){
+    schema    <- deparse(substitute(schema))
+    the_table <- deparse(substitute(the_table))
+    retrieved <- dplyr::tbl(connection,dbplyr::in_schema(schema,the_table))
+    return(retrieved)
+}
+
 #' @title discon_db
 #'
 #' @description This function disconnects a PostgreSQL
