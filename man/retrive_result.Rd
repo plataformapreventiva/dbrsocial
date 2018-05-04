@@ -4,7 +4,7 @@
 \alias{retrive_result}
 \title{retrive_result}
 \usage{
-retrive_result(query)
+retrive_result(query, n)
 }
 \arguments{
 \item{query}{An exec unfetched query}
