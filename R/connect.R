@@ -104,4 +104,3 @@ discon_db <- function(connection){
 clear_results <- function(connection){
     DBI::dbClearResult(DBI::dbListResults(connection)[[1]])
 }
-
