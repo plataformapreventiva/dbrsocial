@@ -33,7 +33,7 @@ prev_connect <- function(){
 pub_connect <- function(s3dir,schema){
     schema <- deparse(substitute(schema))
     s3dir  <- deparse(substitute(s3dir))
-    DBI::dbConnect(AWR.Athena::Athena(), region='us-west-2', s3_staging_dir=s3dir,
+    DBI::dbConnect(AWR.Athena::Athena(), region='us-west-2', s3_staging_dir=paste0("s3://s3dir",
           schema_name=schema)
 }
 
