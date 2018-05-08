@@ -103,22 +103,22 @@ clear_results <- function(connection){
     DBI::dbClearResult(DBI::dbListResults(connection)[[1]])
 }
 
-#' @title catalog
+#' @title csv_s3
 #'
-#' @description Brings a catalog stored in S3 into a dataframe. By default the
+#' @description Brings a CSV stored in S3 into a dataframe. By default the
 #' "catalogo de beneficios"
 #'
 #' @param route Bucket object. String of the bucket object in S3.
 #'
-#' @examples catalogo <- catalog()
+#' @examples catalogo <- csv_s3()
 #' @export
-catalog <- function(route=0){
+csv_s3 <- function(route=0){
     if (route==0) {
-catalogo <- aws.s3::s3read_using(read.csv, object = "s3://pub-raw/diccionarios/catalogo_beneficio.csv")
-return(catalogo)
+the_file <- aws.s3::s3read_using(read.csv, object = "s3://pub-raw/diccionarios/catalogo_beneficio.csv")
+return(the_file)
     }
     else{
-    catalogo <- aws.s3::s3read_using(read.csv, object = route)
-    return(catalogo)
+    the_file <- aws.s3::s3read_using(read.csv, object = route)
+    return(the_file)
     }
 }
