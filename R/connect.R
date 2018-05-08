@@ -18,6 +18,25 @@ prev_connect <- function(){
   dbname   =  Sys.getenv("PGDATABASE"))
 }
 
+#' @title pub_connect
+#'
+#' @description This function connects to an Athena schema and sets the saving
+#' directory in AWS' S3.
+#' to automatically connect to the preventivadb database.
+#' The connection must be saved into a variable in order to
+#' use future functions.
+#'
+#' @examples con <- pub_connect()
+#' @param s3dir The S3 route to save the query results
+#' @param schema The existing schema in Athena
+#' @export
+pub_connect <- function(s3dir,schema){
+    schema <- deparse(substitute(schema))
+    s3dir  <- deparse(substitute(s3dir))
+    DBI::dbConnect(AWR.Athena::Athena(), region='us-west-2', s3_staging_dir=paste0("s3://",s3dir),
+          schema_name=schema)
+}
+
 #' @title load_table
 #'
 #' @description This function loads a connection to
