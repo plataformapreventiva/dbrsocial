@@ -4,7 +4,7 @@
 \alias{pub_connect}
 \title{pub_connect}
 \usage{
-pub_connect(s3dir, schema)
+pub_connect(s3dir = Sys.getenv("S3_DIR"), schema = Sys.getenv("SCHEMA"))
 }
 \arguments{
 \item{s3dir}{The S3 route to save the query results}
