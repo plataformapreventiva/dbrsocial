@@ -30,10 +30,8 @@ prev_connect <- function(){
 #' @param s3dir The S3 route to save the query results
 #' @param schema The existing schema in Athena
 #' @export
-pub_connect <- function(s3dir,schema){
-    schema <- deparse(substitute(schema))
-    s3dir  <- deparse(substitute(s3dir))
-    DBI::dbConnect(AWR.Athena::Athena(), region='us-west-2', s3_staging_dir=paste0("s3://",s3dir),
+pub_connect <- function(s3dir=Sys.getenv("S3_DIR"),schema=Sys.getenv("SCHEMA")){
+    DBI::dbConnect(AWR.Athena::Athena(), region='us-west-2', s3_staging_dir=s3dir,
           schema_name=schema)
 }
 
@@ -103,4 +101,24 @@ discon_db <- function(connection){
 #' @export
 clear_results <- function(connection){
     DBI::dbClearResult(DBI::dbListResults(connection)[[1]])
+}
+
+#' @title csv_s3
+#'
+#' @description Brings a CSV stored in S3 into a dataframe. By default the
+#' "catalogo de beneficios"
+#'
+#' @param route Bucket object. String of the bucket object in S3.
+#'
+#' @examples catalogo <- csv_s3()
+#' @export
+csv_s3 <- function(route=0){
+    if (route==0) {
+the_file <- aws.s3::s3read_using(read.csv, object = "s3://pub-raw/diccionarios/catalogo_beneficio.csv")
+return(the_file)
+    }
+    else{
+    the_file <- aws.s3::s3read_using(read.csv, object = route)
+    return(the_file)
+    }
 }

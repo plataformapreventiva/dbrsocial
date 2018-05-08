@@ -2,11 +2,13 @@
 
 export(clear_results)
 export(cross_tables)
+export(csv_s3)
 export(cuis_raw_sample)
 export(discon_db)
 export(large_table)
 export(load_table)
 export(prev_connect)
+export(pub_connect)
 export(retrive_result)
 export(sample_table)
 importFrom(magrittr,"%>%")
