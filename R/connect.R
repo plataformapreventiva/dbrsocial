@@ -31,8 +31,8 @@ prev_connect <- function(){
 #' @param schema The existing schema in Athena
 #' @export
 pub_connect <- function(s3dir,schema){
-    schema <- deparse(substitute(schema))
-    s3dir  <- deparse(substitute(s3dir))
+    # schema <- deparse(substitute(schema))
+    # s3dir  <- deparse(substitute(s3dir))
     DBI::dbConnect(AWR.Athena::Athena(), region='us-west-2', s3_staging_dir=s3dir,
           schema_name=schema)
 }
