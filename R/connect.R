@@ -30,7 +30,7 @@ prev_connect <- function(){
 #' @param s3dir The S3 route to save the query results
 #' @param schema The existing schema in Athena
 #' @export
-pub_connect <- function(s3dir,schema){
+pub_connect <- function(s3dir=Sys.getenv("S3_DIR"),schema=Sys.getenv("SCHEMA")){
     DBI::dbConnect(AWR.Athena::Athena(), region='us-west-2', s3_staging_dir=s3dir,
           schema_name=schema)
 }
