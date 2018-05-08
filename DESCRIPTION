@@ -12,7 +12,9 @@ Imports: devtools,
   dbplyr,
   DBI,
   RPostgreSQL,
-  chunked
+  chunked,
+  aws.s3,
+  AWR.Athena
 Suggests: knitr,
   testthat,
   rmarkdown
