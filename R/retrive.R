@@ -42,14 +42,14 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
         if (lim==0){
         query  <-  "SELECT * FROM %s.%s tablesample bernoulli(%s)"
         the_query <- sprintf(query,schema,the_table,p)
-        the_sample <- DBI::dbGetQuery(the_query)
+        the_sample <- DBI::dbGetQuery(connection,the_query)
         # DBI::dbClearResult(sample_query)
         return(the_sample)
         }
         else{
         query  <-  "SELECT * FROM %s.%s tablesample bernoulli(%s) limit (%s)"
         the_query <- sprintf(query,schema,the_table,p,lim)
-        the_sample <- DBI::dbGetQuery(the_query)
+        the_sample <- DBI::dbGetQuery(connection,the_query)
         # DBI::dbClearResult(sample_query)
         return(the_sample)
         }
