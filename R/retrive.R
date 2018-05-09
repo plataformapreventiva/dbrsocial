@@ -16,23 +16,43 @@
 #' @examples sample_table(con,0.01,1234,raw,cuis_historico_domicilios)
 #' @export
 sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, lim=0){
-    the_table <- deparse(substitute(the_table))
-    schema <-  deparse(substitute(schema))
-    if (lim==0){
-    query  <-  "SELECT * FROM %s.%s tablesample bernoulli($1) repeatable($2)"
-    the_query <- sprintf(query,schema,the_table)
-    sample_query <- RPostgreSQL::postgresqlExecStatement(connection,the_query,c(p,seed))
-    the_sample <- DBI::dbFetch(sample_query)
-    DBI::dbClearResult(sample_query)
-    return(the_sample)
+    if (connection@class[1]=="PostgreSQLConnection"){
+        the_table <- deparse(substitute(the_table))
+        schema <-  deparse(substitute(schema))
+        if (lim==0){
+        query  <-  "SELECT * FROM %s.%s tablesample bernoulli($1) repeatable($2)"
+        the_query <- sprintf(query,schema,the_table)
+        sample_query <- RPostgreSQL::postgresqlExecStatement(connection,the_query,c(p,seed))
+        the_sample <- DBI::dbFetch(sample_query)
+        DBI::dbClearResult(sample_query)
+        return(the_sample)
+        }
+        else{
+        query  <-  "SELECT * FROM %s.%s tablesample bernoulli($1) repeatable($2) limit ($3)"
+        the_query <- sprintf(query,schema,the_table)
+        sample_query <- RPostgreSQL::postgresqlExecStatement(connection,the_query,c(p,seed,lim))
+        the_sample <- DBI::dbFetch(sample_query)
+        DBI::dbClearResult(sample_query)
+        return(the_sample)
+        }
     }
-    else{
-    query  <-  "SELECT * FROM %s.%s tablesample bernoulli($1) repeatable($2) limit ($3)"
-    the_query <- sprintf(query,schema,the_table)
-    sample_query <- RPostgreSQL::postgresqlExecStatement(connection,the_query,c(p,seed,lim))
-    the_sample <- DBI::dbFetch(sample_query)
-    DBI::dbClearResult(sample_query)
-    return(the_sample)
+    else if (connection@class[1]=="AthenaConnection"){
+        the_table <- deparse(substitute(the_table))
+        schema <-  deparse(substitute(schema))
+        if (lim==0){
+        query  <-  "SELECT * FROM %s.%s tablesample bernoulli(%s)"
+        the_query <- sprintf(query,schema,the_table,p)
+        the_sample <- DBI::dbGetQuery(the_query)
+        # DBI::dbClearResult(sample_query)
+        return(the_sample)
+        }
+        else{
+        query  <-  "SELECT * FROM %s.%s tablesample bernoulli(%s) limit (%s)"
+        the_query <- sprintf(query,schema,the_table,p,lim)
+        the_sample <- DBI::dbGetQuery(the_query)
+        # DBI::dbClearResult(sample_query)
+        return(the_sample)
+        }
     }
 }
 
