@@ -18,6 +18,18 @@ prev_connect <- function(){
   dbname   =  Sys.getenv("PGDATABASE"))
 }
 
+
+#' @title query_dic
+#'
+#' @description Returns a data fram of the Athena queries that has been already runned
+#' @examples queries <- query_dic()
+#'
+#' @export
+query_dic <- function(){
+	the_dic <- csv_s3(paste0(Sys.getenv("S3_DIR"),"/dict/fun_dict.csv"))
+    return(the_dic)
+}
+
 #' @title pub_connect
 #'
 #' @description This function connects to an Athena schema and sets the saving
