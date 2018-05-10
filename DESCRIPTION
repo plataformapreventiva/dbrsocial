@@ -14,7 +14,8 @@ Imports: devtools,
   RPostgreSQL,
   chunked,
   aws.s3,
-  AWR.Athena
+  AWR.Athena,
+  stringr
 Suggests: knitr,
   testthat,
   rmarkdown
