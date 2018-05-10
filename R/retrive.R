@@ -87,3 +87,49 @@ retrive_result <- function(query,n){
     the_table <- DBI::dbFetch(query,n)
     return(the_table)
 }
+
+
+#' @title write_s3
+#'
+#' @description Writes a dataframe as a CSV in a S3 bucket
+#' @param dataf The data.frame objet to write as a CSV
+#' @param name The name of the file in the S3 bucket
+#' @param s3bucket The name of the S3 bucket
+#'
+#' @examples write_s3(the_dic, "dict/fun_dict.csv", Sys.getenv("S3_DIR"))
+#' @export
+write_s3 <- function(dataf, name, s3bucket=Sys.getenv("S3_DIR")){
+    name <- deparse(substitute(name))
+    s3bucket <- deparse(substitute(s3bucket))
+    utils::write.csv(dataf,file="tmp")
+    aws.s3::put_object("tmp", object=name, bucket=s3bucket)
+}
+
+
+#' @title load_or_run
+#'
+#' @description Checks if a query has already been runned in Athena and if it has then
+#' loads the previous results and if it hasn't then it runs it and saves the
+#' query for further usage
+#' @param connection An Athena connection
+#' @param query charachter. A query string
+#' @param the_dic The previously loaded query dictionary
+#'
+#' @export
+load_or_run <- function(connection,query,the_dic){
+    if (connection@class[1]=="AthenaConnection"){
+        query <- gsub("^ *|(?<= ) | *$", "", query, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
+        if (query %in% the_dic$the_query){
+            the_table <- csv_s3(paste0(Sys.getenv("S3_DIR"),the_dic$s3_name))
+            return(the_table)
+        }
+        else {
+            the_table <- DBI::dbGetQuery(connection, query)
+            objects <- aws.s3::get_bucket_df(gsub("s3://","",Sys.getenv("S3_DIR")))
+            where_stored <- objects[order(objects$LastModified, decreasing = TRUE),]$Key[1]
+            the_dic <- rbind(the_dic,c(deparse(substitute(dbGetQuery)),query,where_stored))
+            write_s3(the_dic, "dict/fun_dict.csv", Sys.getenv("S3_DIR"))
+            return(the_table)
+        }
+    }
+}
