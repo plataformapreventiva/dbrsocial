@@ -55,23 +55,23 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
 }
 
 
-#' @title cross_tables
+#' @title join_tables
 #'
 #' @description Returns a match between two tbl by defined key
-#' @param table_1 a tbl-like object
-#' @param table_2 a tbl-like object
-#' @param key_1 the column name from table_1 to compare
-#' @param key_2 the column name from table_2 to compare
+#' @param left_table a tbl-like object
+#' @param right_table a tbl-like object
+#' @param left_key the column name from left_table to compare
+#' @param right_key the column name from right_table to compare
 #'
 #' @examples cross_tables(domicilios_sample_query,cuis_sample,llave_hogar_h,llave_hogar_h)
 #' @export
-cross_tables <- function(table_1, table_2, key_1, key_2){
-    key_1 <- deparse(substitute(key_1))
-    key_2 <- (substitute(key_2))
-    where <- table_1[,key_1]
-    in_tables <- table_2 %>%
+join_tables <- function(left_table, right_table, left_key, right_key){
+    left_key <- deparse(substitute(left_key))
+    right_key <- (substitute(right_key))
+    where <- left_table[,left_key]
+    in_tables <- right_table %>%
         dplyr::tbl_df() %>%
-        dplyr::select(key_2 %in% table_1[[key_1]] ) %>%
+        dplyr::select(right_key %in% left_table[[left_key]] ) %>%
         dplyr::collect()
     return(in_tables)
 }
