@@ -102,7 +102,9 @@ write_s3 <- function(dataf, name, s3bucket=Sys.getenv("S3_DIR")){
     # name <- deparse(substitute(name))
     # s3bucket <- deparse(substitute(s3bucket))
     utils::write.csv(dataf,file="tmp")
-    aws.s3::put_object("tmp", object=name, bucket=s3bucket)
+    instr <- "aws s3 cp tmp %s/%s"
+    instr <- sprintf(instr,s3bucket,name)
+    system(instr)
 }
 
 
@@ -129,7 +131,7 @@ load_or_run <- function(connection,query,the_dic){
             where_stored <- objects[order(objects$LastModified, decreasing = TRUE),]$Key[1]
             where_stored <- gsub("^ *|(?<= ) | *$", "", where_stored, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
             the_dic <- rbind(the_dic,c(deparse(substitute(dbGetQuery)),query,where_stored))
-            write_s3(dataf=the_dic, name="fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
+            write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
             return(the_table)
         }
     }
