@@ -126,11 +126,11 @@ clear_results <- function(connection){
 #' @export
 csv_s3 <- function(route=0){
     if (route==0) {
-the_file <- aws.s3::s3read_using(read_csv, object = "s3://pub-raw/diccionarios/catalogo_beneficio.csv",stringsAsFactors=FALSE)
+the_file <- aws.s3::s3read_using(read_csv, object = "s3://pub-raw/diccionarios/catalogo_beneficio.csv")
 return(the_file)
     }
     else{
-    the_file <- aws.s3::s3read_using(read_csv, object = route,stringsAsFactors=FALSE)
+    the_file <- aws.s3::s3read_using(read_csv, object = route)
     return(the_file)
     }
 }
