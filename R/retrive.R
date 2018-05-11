@@ -131,6 +131,7 @@ load_or_run <- function(connection,query,the_dic){
             where_stored <- objects[order(objects$LastModified, decreasing = TRUE),]$Key[1]
             where_stored <- gsub("^ *|(?<= ) | *$", "", where_stored, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
             the_dic <- rbind(the_dic,c("dbGetQuery",query,where_stored))
+            colnames(the_dic) <- c("the_fun","the_query","s3_name")
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
             return(the_table)
         }
