@@ -1,5 +1,26 @@
 #!/usr/bin/env Rscript
 
+#' @title multireturn
+#' @export
+':=' <- function(lhs, rhs) {
+  frame <- parent.frame()
+  lhs <- as.list(substitute(lhs))
+  if (length(lhs) > 1)
+    lhs <- lhs[-1]
+  if (length(lhs) == 1) {
+    do.call(`=`, list(lhs[[1]], rhs), envir=frame)
+    return(invisible(NULL))
+  }
+  if (is.function(rhs) || is(rhs, 'formula'))
+    rhs <- list(rhs)
+  if (length(lhs) > length(rhs))
+    rhs <- c(rhs, rep(list(NULL), length(lhs) - length(rhs)))
+  for (i in 1:length(lhs))
+    do.call(`=`, list(lhs[[i]], rhs[[i]]), envir=frame)
+  return(invisible(NULL))
+}
+
+
 #' @title sample_table
 #'
 #' @description Random Sample of any given table and schema.
@@ -131,9 +152,12 @@ load_or_run <- function(connection,query,the_dic){
             where_stored <- objects[order(objects$LastModified, decreasing = TRUE),]$Key[1]
             where_stored <- gsub("^ *|(?<= ) | *$", "", where_stored, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
             where_stored <- str_replace_all(where_stored,".metadata" , "")
-            the_dic <- rbind(the_dic,c(query,where_stored),stringsAsFactors=FALSE)
+            the_dic <- rbind(the_dic,c(query,where_stored))
+            if (nrow(the_dic) == 0){
+                colnames(the_dic) <- c("the_query","s3_name")
+            }
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
-            return(the_table)
+            return(list(the_table,the_dic))
         }
     }
 }
