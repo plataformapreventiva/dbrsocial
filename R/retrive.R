@@ -130,7 +130,8 @@ load_or_run <- function(connection,query,the_dic){
             objects <- aws.s3::get_bucket_df(gsub("s3://","",Sys.getenv("S3_DIR")))
             where_stored <- objects[order(objects$LastModified, decreasing = TRUE),]$Key[1]
             where_stored <- gsub("^ *|(?<= ) | *$", "", where_stored, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
-            the_dic <- rbind(the_dic,c(query,where_stored),make.row.names=FALSE,stringsAsFactors=FALSE)
+            where_stored <- str_replace_all(where_stored,".metadata" , "")
+            the_dic <- rbind(the_dic,c(query,where_stored),stringsAsFactors=FALSE)
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
             return(the_table)
         }
