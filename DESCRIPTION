@@ -15,7 +15,7 @@ Imports: devtools,
   chunked,
   aws.s3,
   AWR.Athena,
-  stringr
+  tidiverse
 Suggests: knitr,
   testthat,
   rmarkdown
