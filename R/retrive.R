@@ -99,10 +99,10 @@ retrive_result <- function(query,n){
 #' @examples write_s3(the_dic, "dict/fun_dict.csv", Sys.getenv("S3_DIR"))
 #' @export
 write_s3 <- function(dataf, name, s3bucket=Sys.getenv("S3_DIR")){
-    name <- deparse(substitute(name))
+    # name <- deparse(substitute(name))
     # s3bucket <- deparse(substitute(s3bucket))
     utils::write.csv(dataf,file="tmp")
-    aws.s3::put_object("tmp", object=name, bucket=s3bucket,region="us-west-2")
+    aws.s3::put_object("tmp", object=name, bucket=s3bucket)
 }
 
 
