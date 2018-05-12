@@ -153,10 +153,7 @@ load_or_run <- function(connection,query,the_dic){
             where_stored <- gsub("^ *|(?<= ) | *$", "", where_stored, perl = TRUE) %>%
                 str_replace_all("[\r\n]" , "") %>%
                 str_replace_all(".metadata" , "")
-            the_dic %>% rbind(c(query,where_stored))
-            if (nrow(the_dic) == 1){
-                colnames(the_dic) <- c("the_query","s3_name")
-            }
+            the_dic %>% bind_rows(tibble(the_query=query,s3_name=where_stored))
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
             return(list(the_table,the_dic))
         }
