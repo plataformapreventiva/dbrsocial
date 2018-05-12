@@ -144,7 +144,7 @@ load_or_run <- function(connection,query,the_dic){
         query <- gsub("^ *|(?<= ) | *$", "", query, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
         if (query %in% the_dic$the_query){
             the_table <- csv_s3(paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name))
-            return(the_table)
+            return(list(the_table,the_dic))
         }
         else {
             the_table <- DBI::dbGetQuery(connection, query)
