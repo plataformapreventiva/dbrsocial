@@ -4,7 +4,7 @@
 \alias{csv_s3}
 \title{csv_s3}
 \usage{
-csv_s3(route = 0)
+csv_s3(object = "s3://pub-raw/diccionarios/catalogo_beneficio.csv")
 }
 \arguments{
 \item{route}{Bucket object. String of the bucket object in S3.}

@@ -1,5 +1,28 @@
 #!/usr/bin/env Rscript
 
+#' @title multireturn
+#' @description Allows to return and save multiple variables within a function
+#' @examples c(programas_persona,los_queries) := load_or_run(con,query,los_queries)
+#' @export
+':=' <- function(lhs, rhs) {
+  frame <- parent.frame()
+  lhs <- as.list(substitute(lhs))
+  if (length(lhs) > 1)
+    lhs <- lhs[-1]
+  if (length(lhs) == 1) {
+    do.call(`=`, list(lhs[[1]], rhs), envir=frame)
+    return(invisible(NULL))
+  }
+  if (is.function(rhs) || is(rhs, 'formula'))
+    rhs <- list(rhs)
+  if (length(lhs) > length(rhs))
+    rhs <- c(rhs, rep(list(NULL), length(lhs) - length(rhs)))
+  for (i in 1:length(lhs))
+    do.call(`=`, list(lhs[[i]], rhs[[i]]), envir=frame)
+  return(invisible(NULL))
+}
+
+
 #' @title sample_table
 #'
 #' @description Random Sample of any given table and schema.
@@ -99,10 +122,12 @@ retrive_result <- function(query,n){
 #' @examples write_s3(the_dic, "dict/fun_dict.csv", Sys.getenv("S3_DIR"))
 #' @export
 write_s3 <- function(dataf, name, s3bucket=Sys.getenv("S3_DIR")){
-    name <- deparse(substitute(name))
-    s3bucket <- deparse(substitute(s3bucket))
-    utils::write.csv(dataf,file="tmp")
-    aws.s3::put_object("tmp", object=name, bucket=s3bucket)
+    # name <- deparse(substitute(name))
+    # s3bucket <- deparse(substitute(s3bucket))
+    utils::write.csv(dataf,file="tmp",row.names=FALSE)
+    instr <- "aws s3 cp tmp %s/%s"
+    instr <- sprintf(instr,s3bucket,name)
+    system(instr)
 }
 
 
@@ -120,16 +145,20 @@ load_or_run <- function(connection,query,the_dic){
     if (connection@class[1]=="AthenaConnection"){
         query <- gsub("^ *|(?<= ) | *$", "", query, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
         if (query %in% the_dic$the_query){
-            the_table <- csv_s3(paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name))
-            return(the_table)
+            rown <- which(the_dic$the_query == query)
+            the_table <- csv_s3(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
+            return(list(the_table,the_dic))
         }
         else {
             the_table <- DBI::dbGetQuery(connection, query)
             objects <- aws.s3::get_bucket_df(gsub("s3://","",Sys.getenv("S3_DIR")))
             where_stored <- objects[order(objects$LastModified, decreasing = TRUE),]$Key[1]
-            the_dic <- rbind(the_dic,c(deparse(substitute(dbGetQuery)),query,where_stored))
-            write_s3(the_dic, "dict/fun_dict.csv", Sys.getenv("S3_DIR"))
-            return(the_table)
+            where_stored <- gsub("^ *|(?<= ) | *$", "", where_stored, perl = TRUE) %>%
+                str_replace_all("[\r\n]" , "") %>%
+                str_replace_all(".metadata" , "")
+            the_dic <- bind_rows(the_dic,tibble(the_query=query,s3_name=where_stored))
+            write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
+            return(list(the_table,the_dic))
         }
     }
 }

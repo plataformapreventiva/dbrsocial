@@ -18,7 +18,6 @@ prev_connect <- function(){
   dbname   =  Sys.getenv("PGDATABASE"))
 }
 
-
 #' @title query_dic
 #'
 #' @description Returns a data fram of the Athena queries that has been already runned
@@ -26,6 +25,11 @@ prev_connect <- function(){
 #'
 #' @export
 query_dic <- function(){
+    objects <- aws.s3::get_bucket_df(gsub("s3://","",Sys.getenv("S3_DIR")))
+    if (!("dict/fun_dict.csv" %in% objects$Key)){
+        the_dic <- tibble(the_query=character(), s3_name=character())
+        write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
+    }
 	the_dic <- csv_s3(paste0(Sys.getenv("S3_DIR"),"/dict/fun_dict.csv"))
     return(the_dic)
 }
@@ -124,13 +128,7 @@ clear_results <- function(connection){
 #'
 #' @examples catalogo <- csv_s3()
 #' @export
-csv_s3 <- function(route=0){
-    if (route==0) {
-the_file <- aws.s3::s3read_using(read.csv, object = "s3://pub-raw/diccionarios/catalogo_beneficio.csv")
-return(the_file)
-    }
-    else{
-    the_file <- aws.s3::s3read_using(read.csv, object = route)
+csv_s3 <- function(object="s3://pub-raw/diccionarios/catalogo_beneficio.csv"){
+    the_file <- aws.s3::s3read_using(read_csv, object = object)
     return(the_file)
-    }
 }
