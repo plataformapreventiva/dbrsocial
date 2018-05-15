@@ -18,6 +18,11 @@ prev_connect <- function(){
   dbname   =  Sys.getenv("PGDATABASE"))
 }
 
+# los_queries <- tibble(the_query=character(), s3_name=character())
+# names(los_queries) <- c("the_query","s3_name")
+# los_queries <- bind_rows(los_queries,tibble(the_query=query,s3_name=hola))
+# write_s3(dataf=los_queries, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
+# los_queries <- csv_s3(paste0(Sys.getenv("S3_DIR"),"/dict/fun_dict.csv"))
 
 #' @title query_dic
 #'
@@ -26,6 +31,11 @@ prev_connect <- function(){
 #'
 #' @export
 query_dic <- function(){
+    objects <- aws.s3::get_bucket_df(gsub("s3://","",Sys.getenv("S3_DIR")))
+    if (!("dict/fun_dict.csv" %in% objects$Key)){
+        the_dic <- tibble(the_query=character(), s3_name=character())
+        write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
+    }
 	the_dic <- csv_s3(paste0(Sys.getenv("S3_DIR"),"/dict/fun_dict.csv"))
     return(the_dic)
 }
