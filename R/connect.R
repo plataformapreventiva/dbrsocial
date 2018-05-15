@@ -18,12 +18,6 @@ prev_connect <- function(){
   dbname   =  Sys.getenv("PGDATABASE"))
 }
 
-# los_queries <- tibble(the_query=character(), s3_name=character())
-# names(los_queries) <- c("the_query","s3_name")
-# los_queries <- bind_rows(los_queries,tibble(the_query=query,s3_name=hola))
-# write_s3(dataf=los_queries, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
-# los_queries <- csv_s3(paste0(Sys.getenv("S3_DIR"),"/dict/fun_dict.csv"))
-
 #' @title query_dic
 #'
 #' @description Returns a data fram of the Athena queries that has been already runned
