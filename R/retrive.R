@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
 #' @title multireturn
+#' @description Allows to return and save multiple variables within a function
+#' @examples c(programas_persona,los_queries) := load_or_run(con,query,los_queries)
 #' @export
 ':=' <- function(lhs, rhs) {
   frame <- parent.frame()
