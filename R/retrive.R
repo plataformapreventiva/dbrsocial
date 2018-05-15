@@ -143,7 +143,7 @@ load_or_run <- function(connection,query,the_dic){
     if (connection@class[1]=="AthenaConnection"){
         query <- gsub("^ *|(?<= ) | *$", "", query, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
         if (query %in% the_dic$the_query){
-            the_table <- csv_s3(route=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name))
+            the_table <- csv_s3(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name))
             return(list(the_table,the_dic))
         }
         else {
