@@ -124,13 +124,7 @@ clear_results <- function(connection){
 #'
 #' @examples catalogo <- csv_s3()
 #' @export
-csv_s3 <- function(route=0){
-    if (route==0) {
-the_file <- aws.s3::s3read_using(read_csv, object = "s3://pub-raw/diccionarios/catalogo_beneficio.csv")
-return(the_file)
-    }
-    else{
-    the_file <- aws.s3::s3read_using(read_csv, object = route)
+csv_s3 <- function(object="s3://pub-raw/diccionarios/catalogo_beneficio.csv"){
+    the_file <- aws.s3::s3read_using(read_csv, object = object)
     return(the_file)
-    }
 }
