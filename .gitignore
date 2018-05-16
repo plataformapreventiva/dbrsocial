@@ -24,3 +24,8 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 .Rproj.user
+# ENV variables file
+.env
+
+#original files
+*.orig
