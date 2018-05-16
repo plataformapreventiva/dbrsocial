@@ -1,5 +1,5 @@
-# db-connection
-R package to run queries over the predictivadb database.
+# dbrsocial
+R package to run queries over the predictivadb and athena_pub databases.
 
 In order to get this package running you have to set the following environmental variables:
 * PGHOST
