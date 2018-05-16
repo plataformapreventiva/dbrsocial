@@ -1,9 +1,9 @@
-Package: dbconnection
-Title: Connection to the preventivadb
+Package: dbrsocial
+Title: Connection to the preventivadb and athena_pub data bases
 Version: 0.0.0.1
 Authors@R: c(
-  person("Teresa", "Ortiz", email = "mortiz@conabio.gob.mx", role = c("aut", "cre")),
-  person("Ollin", "Langle", email="ollin.langle@ciencias.unam.mx",role=c("ctb")))
+  person("Ollin", "Langle", email="ollin.langle@ciencias.unam.mx",role=c("aut","cre")),
+  person("Teresa", "Ortiz", email = "mortiz@conabio.gob.mx", role = c("ctb")))
 Description: This package gives a set of tools to connect and interact with the preventivadb.
 Depends: R (>= 3.4.3)
 RoxygenNote: 6.0.1
@@ -19,7 +19,7 @@ Imports: devtools,
 Suggests: knitr,
   testthat,
   rmarkdown
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
