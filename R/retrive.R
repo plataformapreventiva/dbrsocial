@@ -89,9 +89,10 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
 #' @examples cross_tables(domicilios_sample_query,cuis_sample,llave_hogar_h,llave_hogar_h)
 #' @export
 join_tables <- function(left_table, right_table, left_key, right_key){
-    left_key <- deparse(substitute(left_key))
+    # left_key <- deparse(substitute(left_key))
+    left_key <- (substitute(left_key))
     right_key <- (substitute(right_key))
-    where <- left_table[,left_key]
+    # where <- left_table[,left_key]
     in_tables <- right_table %>%
         dplyr::tbl_df() %>%
         dplyr::select(right_key %in% left_table[[left_key]] ) %>%
