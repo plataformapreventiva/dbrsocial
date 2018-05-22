@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-library(dbconnection)
+library(dbrsocial)
 library(magrittr)
 
 con <- prev_connect()
