@@ -93,7 +93,7 @@ join_tables <- function(left_table, right_table, left_key, right_key){
     right_key <- (substitute(right_key))
     in_tables <- right_table %>%
         dplyr::tbl_df() %>%
-        dplyr::filter(right_key %in% left_table$left_key ) %>%
+        dplyr::filter(right_key %in% left_table[[left_key]] ) %>%
         dplyr::collect()
     return(in_tables)
 }
