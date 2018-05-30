@@ -88,14 +88,13 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
 #'
 #' @examples cross_tables(domicilios_sample_query,cuis_sample,llave_hogar_h,llave_hogar_h)
 #' @export
-join_tables <- function(left_table, right_table, left_key, right_key){
-    left_key <- deparse(substitute(left_key))
+join_tables <- function(left_table, left_key, right_table, right_key){
+    left_key <- (substitute(left_key))
     right_key <- (substitute(right_key))
-    where <- left_table[,left_key]
     in_tables <- right_table %>%
         dplyr::tbl_df() %>%
-        dplyr::select(right_key %in% left_table[[left_key]] ) %>%
-        dplyr::collect()
+        dplyr::filter(right_key %in% left_table[[left_key]] ) #%>%
+        #dplyr::collect()
     return(in_tables)
 }
 
@@ -158,6 +157,8 @@ load_or_run <- function(connection,query,the_dic){
                 str_replace_all(".metadata" , "")
             the_dic <- bind_rows(the_dic,tibble(the_query=query,s3_name=where_stored))
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
+            rown <- which(the_dic$the_query == query)
+            the_table <- csv_s3(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
             return(list(the_table,the_dic))
         }
     }
