@@ -145,7 +145,7 @@ load_or_run <- function(connection,query,the_dic){
         query <- gsub("^ *|(?<= ) | *$", "", query, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
         if (query %in% the_dic$the_query){
             rown <- which(the_dic$the_query == query)
-            the_table <- tbl(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
+            the_table <- csv_s3(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
             return(list(the_table,the_dic))
         }
         else {
@@ -158,7 +158,7 @@ load_or_run <- function(connection,query,the_dic){
             the_dic <- bind_rows(the_dic,tibble(the_query=query,s3_name=where_stored))
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
             rown <- which(the_dic$the_query == query)
-            the_table <- tbl(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
+            the_table <- csv_s3(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
             return(list(the_table,the_dic))
         }
     }
