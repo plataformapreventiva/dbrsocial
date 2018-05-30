@@ -157,6 +157,7 @@ load_or_run <- function(connection,query,the_dic){
                 str_replace_all(".metadata" , "")
             the_dic <- bind_rows(the_dic,tibble(the_query=query,s3_name=where_stored))
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
+            the_table <- tbl(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
             return(list(the_table,the_dic))
         }
     }
