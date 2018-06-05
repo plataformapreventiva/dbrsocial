@@ -92,6 +92,7 @@ join_tables <- function(left_table, left_key, right_table, right_key){
     left_key <- deparse(substitute(left_key))
     right_key <- deparse(substitute(right_key))
     in_tables <- left_table %>%
+        dplyr::collect(n=5000) %>%
         # dplyr::tbl_df() %>%
         dplyr::filter(left_key %in% right_table[[right_key]] ) #%>%
         #dplyr::collect()
