@@ -76,7 +76,11 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
         }
     }
 }
+sample %>% dplyr::collect(n=500) %>% dplyr::filter(llave_hogar_h %in% domicilio
+s_sample_query$llave_hogar_h)
 
+sample %>% dplyr::collect(n=50000) %>% dplyr::filter(llave_hogar_h %in% domicil
+ios_sample_query[["llave_hogar_h"]])
 
 #' @title join_tables
 #'
@@ -86,16 +90,13 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
 #' @param left_key the column name from left_table to compare
 #' @param right_key the column name from right_table to compare
 #'
-#' @examples cross_tables(domicilios_sample_query,cuis_sample,llave_hogar_h,llave_hogar_h)
+#' @examples join_tables(cuis_sample,llave_hogar_h,domicilios_sample_query,llave_hogar_h)
 #' @export
 join_tables <- function(left_table, left_key, right_table, right_key){
-    left_key <- deparse(substitute(left_key))
+    left_key <- substitute(left_key)
     right_key <- deparse(substitute(right_key))
     in_tables <- left_table %>%
-        dplyr::collect(n=5000) %>%
-        # dplyr::tbl_df() %>%
-        dplyr::filter(left_key %in% right_table[[right_key]] ) #%>%
-        #dplyr::collect()
+        dplyr::filter(left_key %in% right_table[[right_key]])
     return(in_tables)
 }
 
