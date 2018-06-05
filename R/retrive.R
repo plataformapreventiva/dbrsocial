@@ -102,9 +102,15 @@ join_tables <- function(left_table, left_key, right_table, right_key){
 #'
 #' @examples sample_table(load_table(prev_connect(),raw,sifode))
 #' @export
-retrive_result <- function(query,n){
+retrive_result <- function(query,n=-1,number=Inf){
+    if (class(query)[1] == "tbl_dbi"){
+        the_table <- dplyr::collect(query,n=number)
+        return(the_table)
+    }
+    else{
     the_table <- DBI::dbFetch(query,n)
     return(the_table)
+    }
 }
 
 
