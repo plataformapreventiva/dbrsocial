@@ -76,11 +76,6 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
         }
     }
 }
-sample %>% dplyr::collect(n=500) %>% dplyr::filter(llave_hogar_h %in% domicilio
-s_sample_query$llave_hogar_h)
-
-sample %>% dplyr::collect(n=50000) %>% dplyr::filter(llave_hogar_h %in% domicil
-ios_sample_query[["llave_hogar_h"]])
 
 #' @title join_tables
 #'
