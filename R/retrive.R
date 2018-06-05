@@ -90,10 +90,10 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
 #' @export
 join_tables <- function(left_table, left_key, right_table, right_key){
     left_key <- deparse(substitute(left_key))
-    right_key <- (substitute(right_key))
-    in_tables <- right_table %>%
+    right_key <- deparse(substitute(right_key))
+    in_tables <- left_table %>%
         # dplyr::tbl_df() %>%
-        dplyr::filter(right_key %in% left_table[[left_key]] ) #%>%
+        dplyr::filter(left_key %in% right_table[[right_key]] ) #%>%
         #dplyr::collect()
     return(in_tables)
 }
