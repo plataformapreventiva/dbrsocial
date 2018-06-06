@@ -77,7 +77,6 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
     }
 }
 
-
 #' @title join_tables
 #'
 #' @description Returns a match between two tbl by defined key
@@ -86,16 +85,13 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
 #' @param left_key the column name from left_table to compare
 #' @param right_key the column name from right_table to compare
 #'
-#' @examples cross_tables(domicilios_sample_query,cuis_sample,llave_hogar_h,llave_hogar_h)
+#' @examples join_tables(cuis_sample,llave_hogar_h,domicilios_sample_query,llave_hogar_h)
 #' @export
-join_tables <- function(left_table, right_table, left_key, right_key){
-    left_key <- deparse(substitute(left_key))
-    right_key <- (substitute(right_key))
-    where <- left_table[,left_key]
-    in_tables <- right_table %>%
-        dplyr::tbl_df() %>%
-        dplyr::select(right_key %in% left_table[[left_key]] ) %>%
-        dplyr::collect()
+join_tables <- function(left_table, left_key, right_table, right_key){
+    left_key <- substitute(left_key)
+    right_key <- deparse(substitute(right_key))
+    in_tables <- left_table %>%
+        dplyr::filter(left_key %in% right_table[[right_key]])
     return(in_tables)
 }
 
@@ -106,9 +102,15 @@ join_tables <- function(left_table, right_table, left_key, right_key){
 #'
 #' @examples sample_table(load_table(prev_connect(),raw,sifode))
 #' @export
-retrive_result <- function(query,n){
+retrive_result <- function(query,n=-1,number=Inf){
+    if (class(query)[1] == "tbl_dbi"){
+        the_table <- dplyr::collect(query,n=number)
+        return(the_table)
+    }
+    else{
     the_table <- DBI::dbFetch(query,n)
     return(the_table)
+    }
 }
 
 
@@ -158,6 +160,8 @@ load_or_run <- function(connection,query,the_dic){
                 str_replace_all(".metadata" , "")
             the_dic <- bind_rows(the_dic,tibble(the_query=query,s3_name=where_stored))
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
+            rown <- which(the_dic$the_query == query)
+            the_table <- csv_s3(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
             return(list(the_table,the_dic))
         }
     }
