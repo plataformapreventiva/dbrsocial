@@ -77,7 +77,6 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
     }
 }
 
-
 #' @title join_tables
 #'
 #' @description Returns a match between two tbl by defined key
@@ -86,15 +85,13 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
 #' @param left_key the column name from left_table to compare
 #' @param right_key the column name from right_table to compare
 #'
-#' @examples cross_tables(domicilios_sample_query,cuis_sample,llave_hogar_h,llave_hogar_h)
+#' @examples join_tables(cuis_sample,llave_hogar_h,domicilios_sample_query,llave_hogar_h)
 #' @export
 join_tables <- function(left_table, left_key, right_table, right_key){
-    left_key <- (substitute(left_key))
-    right_key <- (substitute(right_key))
-    in_tables <- right_table %>%
-        dplyr::tbl_df() %>%
-        dplyr::filter(right_key %in% left_table[[left_key]] ) #%>%
-        #dplyr::collect()
+    left_key <- substitute(left_key)
+    right_key <- deparse(substitute(right_key))
+    in_tables <- left_table %>%
+        dplyr::filter(left_key %in% right_table[[right_key]])
     return(in_tables)
 }
 
@@ -105,9 +102,15 @@ join_tables <- function(left_table, left_key, right_table, right_key){
 #'
 #' @examples sample_table(load_table(prev_connect(),raw,sifode))
 #' @export
-retrive_result <- function(query,n=-1){
+retrive_result <- function(query,n=-1,number=Inf){
+    if (class(query)[1] == "tbl_dbi"){
+        the_table <- dplyr::collect(query,n=number)
+        return(the_table)
+    }
+    else{
     the_table <- DBI::dbFetch(query,n)
     return(the_table)
+    }
 }
 
 
