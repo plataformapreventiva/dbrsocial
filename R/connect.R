@@ -73,6 +73,29 @@ load_table <- function(connection,schema,the_table){
                              sprintf(the_query,schema,the_table))
 }
 
+#' @title load_query
+#'
+#' @description This function loads a connection to
+#' a given table from a particular schema in a database
+#' connection.
+#'
+#' @param connection DBI connection. A connection to a database
+#' must be open and given.
+#' @param schema variable. A valid schema from a database on the
+#' connected database.
+#' @param the_table. An existing table in the given schema.
+#' @param the_columns. The columns to retrieve
+#'
+#' @examples the_dic<-load_table(con,raw,sifode_dic)
+#' @export
+load_query <- function(connection,schema,the_table,the_columns="*"){
+    the_query <- "SELECT %s FROM %s.%s"
+    schema    <- deparse(substitute(schema))
+    the_table <- deparse(substitute(the_table))
+    initial <- RPostgreSQL::dbSendQuery(connection,
+                             sprintf(the_query,the_tables,schema,the_table))
+}
+
 #' @title large_table
 #'
 #' @description This function loads a connection to a large table without
