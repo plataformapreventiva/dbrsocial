@@ -12,7 +12,7 @@ domicilios_sample_query <- sample_table(con,0.01,1234,raw,cuis_historico_domicil
 
 cuis_sample <- large_table(con,raw,cuis_39_9) %>%
     join_tables(llave_hogar_h, domicilios_sample_query,llave_hogar_h) %>%
-    retrive_result()
+    retrieve_result()
 
 clear_results(con)
 

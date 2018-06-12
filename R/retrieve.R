@@ -95,14 +95,14 @@ join_tables <- function(left_table, left_key, right_table, right_key){
     return(in_tables)
 }
 
-#' @title retrive_result
+#' @title retrieve_result
 #'
 #' @description Return the fetch results of a query
 #' @param query An exec unfetched query
 #'
 #' @examples sample_table(load_table(prev_connect(),raw,sifode))
 #' @export
-retrive_result <- function(query,n=-1,number=Inf){
+retrieve_result <- function(query,n=-1,number=Inf){
     if (class(query)[1] == "tbl_dbi"){
         the_table <- dplyr::collect(query,n=number)
         return(the_table)
