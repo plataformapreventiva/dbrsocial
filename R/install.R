@@ -3,3 +3,4 @@
 
 dotenv::load_dot_env("../.env")
 devtools::install_github("plataformapreventiva/dbrsocial", ref = "develop",auth_token=Sys.getenv("GITHUB_PATH"), build_vignettes=TRUE)
+devtools::install_github("plataformapreventiva/dbrsocial", ref = "bug/jointables/dbrsocial1",auth_token=Sys.getenv("GITHUB_PATH"), build_vignettes=TRUE)
