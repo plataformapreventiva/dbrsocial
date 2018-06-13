@@ -88,12 +88,13 @@ load_table <- function(connection,schema,the_table){
 #'
 #' @examples the_dic<-load_table(con,raw,sifode_dic)
 #' @export
-load_query <- function(connection,schema,the_table,the_columns="*"){
+load_query <- function(connection,schema,the_table,columns="*",options=""){
     the_query <- "SELECT %s FROM %s.%s"
+    complete <- paste0(the_query," ",options)
     schema    <- deparse(substitute(schema))
     the_table <- deparse(substitute(the_table))
     initial <- RPostgreSQL::dbSendQuery(connection,
-                             sprintf(the_query,the_tables,schema,the_table))
+                             sprintf(complete,columns,schema,the_table))
 }
 
 #' @title large_table
