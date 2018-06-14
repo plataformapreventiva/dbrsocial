@@ -164,7 +164,7 @@ csv_s3 <- function(object="s3://pub-raw/diccionarios/catalogo_beneficio.csv"){
 #'
 #' @param route Bucket object. String of the bucket object in S3.
 #'
-#' @examples
+#' @examples a
 #' @export
 load_geom <- function(connection,schema,the_table,columns="cve_mun, cve_ent, cve_muni, ", geom_col, col_shape, options=""){
     geom_col <- deparse(substitute(geom_col))
@@ -173,12 +173,13 @@ load_geom <- function(connection,schema,the_table,columns="cve_mun, cve_ent, cve
     col_shape <- deparse(substitute(col_shape))
 
     the_query <- "SELECT %s FROM %s.%s"
-    geom_col <- sprintf("ST_AsText(%s) as geom",geom_col)
-    columns <- paste0(columns,geom_col)
+    geom_col_as <- sprintf("ST_AsText(%s) as geom",geom_col)
+    columns <- paste0(columns,geom_col_as)
     complete <- paste0(the_query," ",options)
 
     initial <- RPostgreSQL::dbSendQuery(connection,
-                             sprintf(complete,columns,schema,the_table))
+                             sprintf(complete,columns,schema,the_table)) %>%
+    retrieve_result()
 
     mun_shp = WKT2SpatialPolygonsDataFrame(initial, geom = geom_col, id = col_shape)
     mun_df <- fortify(mun_shp, region = col_shape)
@@ -186,3 +187,7 @@ load_geom <- function(connection,schema,the_table,columns="cve_mun, cve_ent, cve
 
     return(mun_df)
 }
+
+
+
+geom_tlax <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
