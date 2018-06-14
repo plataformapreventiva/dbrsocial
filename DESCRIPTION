@@ -17,6 +17,8 @@ Imports: devtools,
   AWR.Athena,
   readr,
   magrittr,
+  rangeMapper,
+  ggmap,
   tidyverse
 Suggests: knitr,
   testthat,
