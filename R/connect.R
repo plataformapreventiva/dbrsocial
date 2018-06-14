@@ -75,18 +75,19 @@ load_table <- function(connection,schema,the_table){
 
 #' @title load_query
 #'
-#' @description This function loads a connection to
-#' a given table from a particular schema in a database
-#' connection.
+#' @description Gives a "ready to go" data frame for geometry plotting
 #'
 #' @param connection DBI connection. A connection to a database
-#' must be open and given.
 #' @param schema variable. A valid schema from a database on the
-#' connected database.
-#' @param the_table. An existing table in the given schema.
-#' @param the_columns. The columns to retrieve
+#' @param the_table.  An existing table in the given schema.
+#' @param colums string. The columns in the database we want to retrieve
+#' information
+#' @param options string. Part of the SQL query with containing WHERE, ORDER,
+#' LIMIT and so statements
 #'
-#' @examples the_dic<-load_table(con,raw,sifode_dic)
+#' @examples geom_muni <-
+#' load_query(con,raw,sifode,columns="entidadfederativa",options="WHERE
+#' mes="Abril")
 #' @export
 load_query <- function(connection,schema,the_table,columns="*",options=""){
     the_query <- "SELECT %s FROM %s.%s"
@@ -162,9 +163,17 @@ csv_s3 <- function(object="s3://pub-raw/diccionarios/catalogo_beneficio.csv"){
 #'
 #' @description Gives a "ready to go" data frame for geometry plotting
 #'
-#' @param route Bucket object. String of the bucket object in S3.
+#' @param connection DBI connection. A connection to a database
+#' @param schema variable. A valid schema from a database on the
+#' @param the_table.  An existing table in the given schema.
+#' @param colums string. The columns in the database we want to retrieve
+#' @param geom_col . The name of the column in the database that contains a geometry
+#' @param col_shape. The name of the column that we want to use to join
+#' information
+#' @param options string. Part of the SQL query with containing WHERE, ORDER,
+#' LIMIT and so statements
 #'
-#' @examples a
+#' @examples geom_muni <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
 #' @export
 load_geom <- function(connection,schema,the_table,columns="cve_mun, cve_ent, cve_muni, ", geom_col, col_shape, options=""){
     geom_col <- deparse(substitute(geom_col))
@@ -187,7 +196,3 @@ load_geom <- function(connection,schema,the_table,columns="cve_mun, cve_ent, cve
 
     return(mun_df)
 }
-
-
-
-geom_tlax <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
