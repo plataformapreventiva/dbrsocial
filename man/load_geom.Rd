@@ -9,8 +9,25 @@ load_geom(connection, schema, the_table,
   options = "")
 }
 \arguments{
-\item{route}{Bucket object. String of the bucket object in S3.}
+\item{connection}{DBI connection. A connection to a database}
+
+\item{schema}{variable. A valid schema from a database on the}
+
+\item{geom_col}{. The name of the column in the database that contains a geometry}
+
+\item{options}{string. Part of the SQL query with containing WHERE, ORDER,
+LIMIT and so statements}
+
+\item{the_table.}{An existing table in the given schema.}
+
+\item{colums}{string. The columns in the database we want to retrieve}
+
+\item{col_shape.}{The name of the column that we want to use to join
+information}
 }
 \description{
 Gives a "ready to go" data frame for geometry plotting
+}
+\examples{
+geom_muni <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
 }

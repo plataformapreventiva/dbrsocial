@@ -7,21 +7,18 @@
 load_query(connection, schema, the_table, columns = "*", options = "")
 }
 \arguments{
-\item{connection}{DBI connection. A connection to a database
-must be open and given.}
+\item{connection}{DBI connection. A connection to a database}
 
-\item{schema}{variable. A valid schema from a database on the
-connected database.}
+\item{schema}{variable. A valid schema from a database on the}
+
+\item{options}{string. Part of the SQL query with containing WHERE, ORDER,
+LIMIT and so statements}
 
 \item{the_table.}{An existing table in the given schema.}
 
-\item{the_columns.}{The columns to retrieve}
+\item{colums}{string. The columns in the database we want to retrieve
+information}
 }
 \description{
-This function loads a connection to
-a given table from a particular schema in a database
-connection.
-}
-\examples{
-the_dic<-load_table(con,raw,sifode_dic)
+Gives a "ready to go" data frame for geometry plotting
 }
