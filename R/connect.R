@@ -196,3 +196,27 @@ load_geom <- function(connection,schema,the_table,columns="cve_mun, cve_ent, cve
 
     return(mun_df)
 }
+
+
+#' @title mun_geom
+#'
+#' @description Loads the municipalities geometries nation-wide or entity-wide
+#'
+#' @param connection DBI connection. A connection to a database
+#' @param ent char. The string corresponding to the cveent, if blank returns
+#' national entities.
+#'
+#' @examples geom_national <- mun_geom(con1)
+#' @examples geom_tlaxcala <- mun_geom(con1,"29")
+#' @export
+mun_geom <- function(connection,ent=""){
+    if (ent==""){
+        geom <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
+        return(geom)
+    }
+    else {
+        options <- paste0("WHERE cve_ent = ",ent)
+        geom <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
+        return(geom)
+    }
+}
