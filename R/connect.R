@@ -87,7 +87,7 @@ load_table <- function(connection,schema,the_table){
 #'
 #' @examples geom_muni <-
 #' load_query(con,raw,sifode,columns="entidadfederativa",options="WHERE
-#' mes="Abril")
+#' mes='Abril'")
 #' @export
 load_query <- function(connection,schema,the_table,columns="*",options=""){
     the_query <- "SELECT %s FROM %s.%s"
