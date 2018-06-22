@@ -6,6 +6,7 @@
 #'  labs(title="Número de beneficiarios por municipio", fill="Número de beneficiarios",y="Beneficiarios únicos") +
 #'  scale_y_continuous(labels = comma,breaks = pretty_breaks(n = 6)) +
 #'  theme_pub()
+#' @export
 theme_pub <- function(base_size=12, font=NA){
   txt <- element_text(size = base_size+2, colour = "black", face = "plain")
   bold_txt <- element_text(size = base_size+2, colour = "black", face = "bold")
