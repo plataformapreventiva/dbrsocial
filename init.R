@@ -17,3 +17,5 @@ devtools::install_github("hadley/devtools")
 devtools::create_package("route/here/predictivadbr")
 
 usethis::use_testthat()
+
+devtools::document()

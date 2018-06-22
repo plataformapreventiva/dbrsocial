@@ -1,4 +1,4 @@
 library(testthat)
-library(dbconnection)
+library(dbrsocial)
 
-test_check("dbconnection")
+test_check("dbrsocial")

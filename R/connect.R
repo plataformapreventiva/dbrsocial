@@ -73,6 +73,32 @@ load_table <- function(connection,schema,the_table){
                              sprintf(the_query,schema,the_table))
 }
 
+#' @title load_query
+#'
+#' @description Gives a "ready to go" data frame for geometry plotting
+#'
+#' @param connection DBI connection. A connection to a database
+#' @param schema variable. A valid schema from a database on the
+#' @param the_table.  An existing table in the given schema.
+#' @param colums string. The columns in the database we want to retrieve
+#' information
+#' @param options string. Part of the SQL query with containing WHERE, ORDER,
+#' LIMIT and so statements
+#'
+#' @examples geom_muni <-
+#' load_query(con,raw,sifode,columns="entidadfederativa",options="WHERE
+#' mes='Abril'")
+#' @export
+load_query <- function(connection,schema,the_table,columns="*",options=""){
+    the_query <- "SELECT %s FROM %s.%s"
+    complete <- paste0(the_query," ",options)
+    schema    <- deparse(substitute(schema))
+    the_table <- deparse(substitute(the_table))
+    initial <- RPostgreSQL::dbSendQuery(connection,
+                             sprintf(complete,columns,schema,the_table))
+    return(initial)
+}
+
 #' @title large_table
 #'
 #' @description This function loads a connection to a large table without
@@ -131,4 +157,66 @@ clear_results <- function(connection){
 csv_s3 <- function(object="s3://pub-raw/diccionarios/catalogo_beneficio.csv"){
     the_file <- aws.s3::s3read_using(read_csv, object = object)
     return(the_file)
+}
+
+#' @title load_geom
+#'
+#' @description Gives a "ready to go" data frame for geometry plotting
+#'
+#' @param connection DBI connection. A connection to a database
+#' @param schema variable. A valid schema from a database on the
+#' @param the_table.  An existing table in the given schema.
+#' @param colums string. The columns in the database we want to retrieve
+#' @param geom_col . The name of the column in the database that contains a geometry
+#' @param col_shape. The name of the column that we want to use to join
+#' information
+#' @param options string. Part of the SQL query with containing WHERE, ORDER,
+#' LIMIT and so statements
+#'
+#' @examples geom_muni <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
+#' @export
+load_geom <- function(connection,schema,the_table,columns="cve_mun, cve_ent, cve_muni, ", geom_col, col_shape, options=""){
+    geom_col <- deparse(substitute(geom_col))
+    schema    <- deparse(substitute(schema))
+    the_table <- deparse(substitute(the_table))
+    col_shape <- deparse(substitute(col_shape))
+
+    the_query <- "SELECT %s FROM %s.%s"
+    geom_col_as <- sprintf("ST_AsText(%s) as geom",geom_col)
+    columns <- paste0(columns,geom_col_as)
+    complete <- paste0(the_query," ",options)
+
+    initial <- RPostgreSQL::dbSendQuery(connection,
+                             sprintf(complete,columns,schema,the_table)) %>%
+    retrieve_result()
+
+    mun_shp = WKT2SpatialPolygonsDataFrame(initial, geom = geom_col, id = col_shape)
+    mun_df <- fortify(mun_shp, region = col_shape)
+    names(mun_df)[names(mun_df)=="id"] <- col_shape
+
+    return(mun_df)
+}
+
+
+#' @title mun_geom
+#'
+#' @description Loads the municipalities geometries nation-wide or entity-wide
+#'
+#' @param connection DBI connection. A connection to a database
+#' @param ent char. The string corresponding to the cveent, if blank returns
+#' national entities.
+#'
+#' @examples geom_national <- mun_geom(con1)
+#' @examples geom_tlaxcala <- mun_geom(con1,"29")
+#' @export
+mun_geom <- function(connection,ent=""){
+    if (ent==""){
+        geom <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
+        return(geom)
+    }
+    else {
+        options <- paste0("WHERE cve_ent = ",ent)
+        geom <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
+        return(geom)
+    }
 }
