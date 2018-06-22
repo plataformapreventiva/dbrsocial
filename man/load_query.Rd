@@ -22,3 +22,8 @@ information}
 \description{
 Gives a "ready to go" data frame for geometry plotting
 }
+\examples{
+geom_muni <-
+load_query(con,raw,sifode,columns="entidadfederativa",options="WHERE
+mes='Abril'")
+}

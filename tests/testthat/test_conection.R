@@ -1,5 +1,5 @@
 context("Connection to the database")
-library(dbconnection)
+library(dbrsocial)
 
 test_that("prev_connect connects to the database",{
               expect_equal(typeof(prev_connect()),"S4")
