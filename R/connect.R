@@ -175,7 +175,7 @@ csv_s3 <- function(object="s3://pub-raw/diccionarios/catalogo_beneficio.csv"){
 #'
 #' @examples geom_muni <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
 #' @export
-load_geom <- function(connection,schema,the_table,columns="* ", geom_col, col_shape, options=""){
+load_geom <- function(connection,schema,the_table,columns="*, ", geom_col, col_shape, options=""){
     geom_col <- deparse(substitute(geom_col))
     schema    <- deparse(substitute(schema))
     the_table <- deparse(substitute(the_table))
