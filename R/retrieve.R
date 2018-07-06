@@ -32,28 +32,34 @@
 #' table, defaults to 0.01.
 #' @param seed numeric value to be used to generate a seeding for the PRNG
 #'   random generator in Postgres backend.
+#' @param colums string. The columns in the database we want to retrieve
+#' information defaults to all
+#' @param options string. Part of the SQL query with containing WHERE, ORDER,
+#' LIMIT and so statements
 #' @importFrom magrittr %>%
 #'
 #' @param lim int. A limit for SQL lines to return.
 #'
 #' @examples sample_table(con,0.01,1234,raw,cuis_historico_domicilios)
 #' @export
-sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, lim=0){
+sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, columns="*",options="" lim=0){
     if (connection@class[1]=="PostgreSQLConnection"){
         the_table <- deparse(substitute(the_table))
         schema <-  deparse(substitute(schema))
         if (lim==0){
-        query  <-  "SELECT * FROM %s.%s tablesample bernoulli($1) repeatable($2)"
-        the_query <- sprintf(query,schema,the_table)
-        sample_query <- RPostgreSQL::postgresqlExecStatement(connection,the_query,c(p,seed))
+        query  <-  "SELECT %s FROM %s.%s tablesample bernoulli($1) repeatable($2)"
+        the_query <- sprintf(query,columns,schema,the_table)
+        complete <- paste0(the_query," ",options)
+        sample_query <- RPostgreSQL::postgresqlExecStatement(connection,columns,c(p,seed))
         the_sample <- DBI::dbFetch(sample_query)
         DBI::dbClearResult(sample_query)
         return(the_sample)
         }
         else{
-        query  <-  "SELECT * FROM %s.%s tablesample bernoulli($1) repeatable($2) limit ($3)"
-        the_query <- sprintf(query,schema,the_table)
-        sample_query <- RPostgreSQL::postgresqlExecStatement(connection,the_query,c(p,seed,lim))
+        query  <-  "SELECT %s FROM %s.%s tablesample bernoulli($1) repeatable($2) limit ($3)"
+        the_query <- sprintf(query,columns,schema,the_table)
+        complete <- paste0(the_query," ",options)
+        sample_query <- RPostgreSQL::postgresqlExecStatement(connection,complete,c(p,seed,lim))
         the_sample <- DBI::dbFetch(sample_query)
         DBI::dbClearResult(sample_query)
         return(the_sample)
@@ -63,15 +69,17 @@ sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, l
         the_table <- deparse(substitute(the_table))
         schema <-  deparse(substitute(schema))
         if (lim==0){
-        query  <-  "SELECT * FROM %s.%s tablesample bernoulli(%s)"
-        the_query <- sprintf(query,schema,the_table,p)
-        the_sample <- DBI::dbGetQuery(connection,the_query)
+        query  <-  "SELECT %s FROM %s.%s tablesample bernoulli(%s)"
+        the_query <- sprintf(query,columns,schema,the_table,p)
+        complete <- paste0(the_query," ",options)
+        the_sample <- DBI::dbGetQuery(connection,complete)
         return(the_sample)
         }
         else{
-        query  <-  "SELECT * FROM %s.%s tablesample bernoulli(%s) limit (%s)"
-        the_query <- sprintf(query,schema,the_table,p,lim)
-        the_sample <- DBI::dbGetQuery(connection,the_query)
+        query  <-  "SELECT %s FROM %s.%s tablesample bernoulli(%s) limit (%s)"
+        the_query <- sprintf(query,columns,schema,the_table,p,lim)
+        complete <- paste0(the_query," ",options)
+        the_sample <- DBI::dbGetQuery(connection,complete)
         return(the_sample)
         }
     }
