@@ -42,7 +42,7 @@
 #'
 #' @examples sample_table(con,0.01,1234,raw,cuis_historico_domicilios)
 #' @export
-sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, columns="*",options="" lim=0){
+sample_table <- function(connection, p = 0.01, seed = 1234, schema, the_table, columns="*",options="", lim=0){
     if (connection@class[1]=="PostgreSQLConnection"){
         the_table <- deparse(substitute(the_table))
         schema <-  deparse(substitute(schema))
