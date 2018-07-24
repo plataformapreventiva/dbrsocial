@@ -75,7 +75,7 @@ load_table <- function(connection,schema,the_table){
 
 #' @title load_query
 #'
-#' @description Gives a "ready to go" data frame for geometry plotting
+#' @description Allows to run specific queries with the dbrsocial syntax.
 #'
 #' @param connection DBI connection. A connection to a database
 #' @param schema variable. A valid schema from a database on the
@@ -166,7 +166,8 @@ csv_s3 <- function(object="s3://pub-raw/diccionarios/catalogo_beneficio.csv"){
 #' @param connection DBI connection. A connection to a database
 #' @param schema variable. A valid schema from a database on the
 #' @param the_table.  An existing table in the given schema.
-#' @param colums string. The columns in the database we want to retrieve
+#' @param colums string. The columns in the database we want to retrieve.
+#' Defaults cve_ent, cve_mun, cve_muni.
 #' @param geom_col . The name of the column in the database that contains a geometry
 #' @param col_shape. The name of the column that we want to use to join
 #' information
@@ -175,14 +176,14 @@ csv_s3 <- function(object="s3://pub-raw/diccionarios/catalogo_beneficio.csv"){
 #'
 #' @examples geom_muni <- load_geom(con1,raw,geom_municipios,geom_col=geom,col_shape=cve_muni,options=options)
 #' @export
-load_geom <- function(connection,schema,the_table,columns="cve_ent, cve_mun, cve_muni, ", geom_col, col_shape, options=""){
+load_geom <- function(connection,schema,the_table,columns="cve_ent, cve_mun, cve_muni", geom_col, col_shape, options=""){
     geom_col <- deparse(substitute(geom_col))
     schema    <- deparse(substitute(schema))
     the_table <- deparse(substitute(the_table))
     col_shape <- deparse(substitute(col_shape))
 
     the_query <- "SELECT %s FROM %s.%s"
-    geom_col_as <- sprintf("ST_AsText(%s) as geom",geom_col)
+    geom_col_as <- sprintf(", ST_AsText(%s) as geom",geom_col)
     columns <- paste0(columns,geom_col_as)
     complete <- paste0(the_query," ",options)
 
@@ -190,7 +191,7 @@ load_geom <- function(connection,schema,the_table,columns="cve_ent, cve_mun, cve
                              sprintf(complete,columns,schema,the_table)) %>%
     retrieve_result()
 
-    mun_shp = WKT2SpatialPolygonsDataFrame(initial, geom = geom_col, id = col_shape)
+    mun_shp = rangeMapper::WKT2SpatialPolygonsDataFrame(initial, geom = geom_col, id = col_shape)
     mun_df <- fortify(mun_shp, region = col_shape)
     names(mun_df)[names(mun_df)=="id"] <- col_shape
 
