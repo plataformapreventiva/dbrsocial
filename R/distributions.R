@@ -30,6 +30,8 @@ box_payment <- function(connection,dict,options=""){
               FROM los_rangos"
     query <- paste0(the_query1,options,the_query2)
     c(the_df,dict) := load_or_run(connection,query,dict)
+    catalogo_beneficios <- csv_s3()
+    colnames(catalogo_beneficios) <- c("cdbeneficio","nbbeneficio")
     the_df <- the_df %>%
     left_join(catalogo_beneficios)
     the_df$outliers <- gsub('\\[|\\]','',the_df$outliers) %>%
