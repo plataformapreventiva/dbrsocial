@@ -5,7 +5,7 @@
 \title{sample_table}
 \usage{
 sample_table(connection, p = 0.01, seed = 1234, schema, the_table,
-  lim = 0)
+  columns = "*", options = "", lim = 0)
 }
 \arguments{
 \item{connection}{DBIConnection object to Postgres predictiva data base, as
@@ -17,7 +17,13 @@ table, defaults to 0.01.}
 \item{seed}{numeric value to be used to generate a seeding for the PRNG
 random generator in Postgres backend.}
 
+\item{options}{string. Part of the SQL query with containing WHERE, ORDER,
+LIMIT and so statements}
+
 \item{lim}{int. A limit for SQL lines to return.}
+
+\item{colums}{string. The columns in the database we want to retrieve
+information defaults to all}
 }
 \description{
 Random Sample of any given table and schema.

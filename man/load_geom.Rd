@@ -5,8 +5,7 @@
 \title{load_geom}
 \usage{
 load_geom(connection, schema, the_table,
-  columns = "cve_mun, cve_ent, cve_muni, ", geom_col, col_shape,
-  options = "")
+  columns = "cve_ent, cve_mun, cve_muni", geom_col, col_shape, options = "")
 }
 \arguments{
 \item{connection}{DBI connection. A connection to a database}
@@ -20,7 +19,8 @@ LIMIT and so statements}
 
 \item{the_table.}{An existing table in the given schema.}
 
-\item{colums}{string. The columns in the database we want to retrieve}
+\item{colums}{string. The columns in the database we want to retrieve.
+Defaults cve_ent, cve_mun, cve_muni.}
 
 \item{col_shape.}{The name of the column that we want to use to join
 information}

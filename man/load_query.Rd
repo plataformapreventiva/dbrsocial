@@ -20,7 +20,7 @@ LIMIT and so statements}
 information}
 }
 \description{
-Gives a "ready to go" data frame for geometry plotting
+Allows to run specific queries with the dbrsocial syntax.
 }
 \examples{
 geom_muni <-
