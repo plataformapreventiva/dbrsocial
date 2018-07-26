@@ -28,7 +28,7 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
 		joinner <- csv_s3("s3://pub-raw/diccionarios/estados.csv")
 		colnames(joinner) <- c("num","id","pagos","distintos")
 } else if (to_join=="beneficios"){
-    the_query2 <- sprintf(the_query2,"cdbenecio","cdbenecio","cdbenecio","cdbenecio")
+    the_query2 <- sprintf(the_query2,"cdbeneficio","cdbeneficio","cdbeneficio","cdbeneficio")
     joinner <- csv_s3()
     colnames(joinner) <- c("cdbeneficio","nbbeneficio")
 }
