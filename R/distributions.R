@@ -12,16 +12,10 @@
 #' @examples c(dinero_programa, all_values) <- box_payment(con, the_queries, options=options)
 #' @export
 box_payment <- function(connection,dict,options=""){
-    the_query1 <- "WITH los_montos AS (SELECT numespago, cdbeneficio, newid, sum(nuimpmonetario) as monto
-              FROM athena_pub.pub_public "
-    the_query2 <- "),\nlos_valores AS (SELECT cdbeneficio, avg(monto) as media, approx_percentile(monto,0.25) as q1,
-                      approx_percentile(monto,0.5) as q2, approx_percentile(monto,0.75) as q3,
-                      stddev(monto) as std, array_agg(monto) as valores
-              FROM los_montos
-              GROUP BY cdbeneficio),
+    the_query1 <- "WITH los_montos AS (SELECT numespago, cdbeneficio, newid, sum(nuimpmonetario) as monto FROM athena_pub.pub_public "
+    the_query2 <- "),los_valores AS (SELECT cdbeneficio, avg(monto) as media, approx_percentile(monto,0.25) as q1, approx_percentile(monto,0.5) as q2, approx_percentile(monto,0.75) as q3,stddev(monto) as std, array_agg(monto) as valores FROM los_montos GROUP BY cdbeneficio),
 
-              los_rangos AS (SELECT cdbeneficio, media, q1, q2, q3,  std, abs(q3)-abs(q1) as IQR, filter(valores, x -> x IS NOT NULL) as nonull
-              FROM los_valores)
+              los_rangos AS (SELECT cdbeneficio, media, q1, q2, q3,  std, abs(q3)-abs(q1) as IQR, filter(valores, x -> x IS NOT NULL) as nonull FROM los_valores)
 
               SELECT cdbeneficio, media, q1, q2, q3, std,
               array_union(filter(nonull, x -> x > q3+1.5*IQR),filter(nonull, x -> x < q1-1.5*IQR)) as outliers,
