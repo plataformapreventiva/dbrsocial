@@ -4,7 +4,9 @@
 \alias{box_payment}
 \title{box_payment}
 \usage{
-box_payment(connection, dict, options = "")
+box_payment(connection, dict,
+  columns = "numespago, cdbeneficio, newid, sum(nuimpmonetario) as monto FROM athena_pub.pub_public",
+  options = "")
 }
 \arguments{
 \item{connection}{DBI connection. A connection to a database}
