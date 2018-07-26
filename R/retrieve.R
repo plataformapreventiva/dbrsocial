@@ -153,7 +153,7 @@ write_s3 <- function(dataf, name, s3bucket=Sys.getenv("S3_DIR")){
 #' @export
 load_or_run <- function(connection,query,the_dic){
     if (connection@class[1]=="AthenaConnection"){
-        query <- gsub("^ *|(?<= ) | *$", "", query, perl = TRUE) %>% str_replace_all("[\r\n]" , "")
+        query <- gsub("^ *|(?<= ) | *$", "", query, perl = TRUE) %>% stringr::str_replace_all("[\r\n]" , "")
         if (query %in% the_dic$the_query){
             rown <- which(the_dic$the_query == query)
             the_table <- csv_s3(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))
@@ -164,9 +164,9 @@ load_or_run <- function(connection,query,the_dic){
             objects <- aws.s3::get_bucket_df(gsub("s3://","",Sys.getenv("S3_DIR")))
             where_stored <- objects[order(objects$LastModified, decreasing = TRUE),]$Key[1]
             where_stored <- gsub("^ *|(?<= ) | *$", "", where_stored, perl = TRUE) %>%
-                str_replace_all("[\r\n]" , "") %>%
-                str_replace_all(".metadata" , "")
-            the_dic <- bind_rows(the_dic,tibble(the_query=query,s3_name=where_stored))
+                stringr::str_replace_all("[\r\n]" , "") %>%
+                stringr::str_replace_all(".metadata" , "")
+            the_dic <- dplyr::bind_rows(the_dic,tibble::tibble(the_query=query,s3_name=where_stored))
             write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
             rown <- which(the_dic$the_query == query)
             the_table <- csv_s3(object=paste0(Sys.getenv("S3_DIR"),"/",the_dic$s3_name[rown]))

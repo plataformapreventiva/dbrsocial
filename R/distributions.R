@@ -1,20 +1,20 @@
 #' @title box_payment
 #'
 #' @description Ease the query execution to get payments distribution
-#'
+#' @importFrom magrittr %>%
 #' @param connection DBI connection. A connection to a database
 #' @param dict DataFrame. The queries dictionary for load_or_run
 #' @param options string. Part of the SQL query with containing WHERE, ORDER,
 #' LIMIT and so statements
 #'
 #' @examples options <- "WHERE anio=2017 AND cast(newid as integer) < 500000000
-#' AND cveent='29' AND cddependencia='20' GROUP BY cdbeneficio, newid"
-#' c(dinero_programa, all_values) <- box_payment(con, the_queries, options=options)
+#' @examples AND cveent='29' AND cddependencia='20' GROUP BY cdbeneficio, newid"
+#' @examples c(dinero_programa, all_values) <- box_payment(con, the_queries, options=options)
 #' @export
 box_payment <- function(connection,dict,options=""){
     the_query1 <- "WITH los_montos AS (SELECT numespago, cdbeneficio, newid, sum(nuimpmonetario) as monto
               FROM athena_pub.pub_public "
-    the_query2 <- "),los_valores AS (SELECT cdbeneficio, avg(monto) as media, approx_percentile(monto,0.25) as q1,
+    the_query2 <- "),\nlos_valores AS (SELECT cdbeneficio, avg(monto) as media, approx_percentile(monto,0.25) as q1,
                       approx_percentile(monto,0.5) as q2, approx_percentile(monto,0.75) as q3,
                       stddev(monto) as std, array_agg(monto) as valores
               FROM los_montos
@@ -33,7 +33,7 @@ box_payment <- function(connection,dict,options=""){
     catalogo_beneficios <- csv_s3()
     colnames(catalogo_beneficios) <- c("cdbeneficio","nbbeneficio")
     the_df <- the_df %>%
-    left_join(catalogo_beneficios)
+    dplyr::left_join(catalogo_beneficios)
     the_df$outliers <- gsub('\\[|\\]','',the_df$outliers) %>%
     strsplit(., split=", ")
     the_df$outliers <- lapply(the_df$outliers,as.integer)
@@ -42,7 +42,7 @@ box_payment <- function(connection,dict,options=""){
     the_df$nbbeneficio[is.na(the_df$nbbeneficio)] <- as.character(the_df$cdbeneficio[is.na(the_df$nbbeneficio)])
     the_df <- the_df[!is.na(the_df$media),]
 
-    all_values <-unnest(the_df,outliers)
+    all_values <- tidyr::unnest(the_df,outliers)
     all_values$max[is.na(all_values$max)] <- all_values$q3[is.na(all_values$max)]
     all_values$min[is.na(all_values$min)] <- all_values$q3[is.na(all_values$min)]
 

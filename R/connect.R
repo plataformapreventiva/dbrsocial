@@ -27,7 +27,7 @@ prev_connect <- function(){
 query_dic <- function(){
     objects <- aws.s3::get_bucket_df(gsub("s3://","",Sys.getenv("S3_DIR")))
     if (!("dict/fun_dict.csv" %in% objects$Key)){
-        the_dic <- tibble(the_query=character(), s3_name=character())
+        the_dic <- tibble::tibble(the_query=character(), s3_name=character())
         write_s3(dataf=the_dic, name="dict/fun_dict.csv", s3bucket=Sys.getenv("S3_DIR"))
     }
 	the_dic <- csv_s3(paste0(Sys.getenv("S3_DIR"),"/dict/fun_dict.csv"))
