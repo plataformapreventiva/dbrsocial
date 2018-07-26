@@ -27,10 +27,10 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
         the_query2 <- sprintf(the_query2,"cveent","cveent","cveent","cveent")
 		joinner <- csv_s3("s3://pub-raw/diccionarios/estados.csv")
         colnames(joinner) <- c("cveent","name","pagos","distintos")
-} else if (to_join=="beneficios"){
-    the_query2 <- sprintf(the_query2,"cdbeneficio","cdbeneficio","cdbeneficio","cdbeneficio")
-    joinner <- csv_s3()
-    colnames(joinner) <- c("cdbeneficio","nbbeneficio")
+    } else if (to_join=="beneficios"){
+        the_query2 <- sprintf(the_query2,"cdbeneficio","cdbeneficio","cdbeneficio","cdbeneficio")
+        joinner <- csv_s3()
+        colnames(joinner) <- c("cdbeneficio","nbbeneficio")
 }
 
     query <- paste0(the_query1,columns," ",the_from," ",options,the_query2)
@@ -40,15 +40,17 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
     dplyr::left_join(joinner)
     the_df$outliers <- gsub('\\[|\\]','',the_df$outliers) %>%
     strsplit(., split=", ")
-
-	if (to_join=="beneficios"){
     the_df$outliers <- lapply(the_df$outliers,as.integer)
     the_df$max[is.na(the_df$max)] <- the_df$q3[is.na(the_df$max)]
     the_df$min[is.na(the_df$min)] <- the_df$q1[is.na(the_df$min)]
+
+    if (to_join=="estados"){
+        the_df$cveent <- as.integer(the_df$cveent)
+    } else if (to_join=="beneficios"){
     the_df$nbbeneficio[is.na(the_df$nbbeneficio)] <- as.character(the_df$cdbeneficio[is.na(the_df$nbbeneficio)])
-    the_df <- the_df[!is.na(the_df$media),]
 }
 
+    the_df <- the_df[!is.na(the_df$media),]
     all_values <- tidyr::unnest(the_df,outliers)
     all_values$max[is.na(all_values$max)] <- all_values$q3[is.na(all_values$max)]
     all_values$min[is.na(all_values$min)] <- all_values$q3[is.na(all_values$min)]
