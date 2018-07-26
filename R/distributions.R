@@ -25,10 +25,10 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
     query <- paste0(the_query1,columns," ",the_from," ",options,the_query2)
     c(the_df,dict) := load_or_run(connection,query,dict)
 
-	if (to_join="estados"){
+	if (to_join=="estados"){
 		joinner <- csv_s3("s3://pub-raw/diccionarios/estados.csv")
 		colnames(joinner) <- c("num","id","pagos","distintos")
-} else if (to_join="beneficios"){
+} else if (to_join=="beneficios"){
     joinner <- csv_s3()
     colnames(joinner) <- c("cdbeneficio","nbbeneficio")
 }
@@ -38,7 +38,7 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
     the_df$outliers <- gsub('\\[|\\]','',the_df$outliers) %>%
     strsplit(., split=", ")
 
-	if (to_join="beneficios"){
+	if (to_join=="beneficios"){
     the_df$outliers <- lapply(the_df$outliers,as.integer)
     the_df$max[is.na(the_df$max)] <- the_df$q3[is.na(the_df$max)]
     the_df$min[is.na(the_df$min)] <- the_df$q1[is.na(the_df$min)]
