@@ -18,7 +18,6 @@ LIMIT and so statements}
 Ease the query execution to get payments distribution
 }
 \examples{
-options <- "WHERE anio=2017 AND cast(newid as integer) < 500000000
-AND cveent='29' AND cddependencia='20' GROUP BY cdbeneficio, newid"
+options <- "WHERE anio=2017 AND cast(newid as integer) < 500000000 AND cveent='29' AND cddependencia='20' GROUP BY cdbeneficio, newid"
 c(dinero_programa, all_values) <- box_payment(con, the_queries, options=options)
 }

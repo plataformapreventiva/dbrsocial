@@ -7,8 +7,7 @@
 #' @param options string. Part of the SQL query with containing WHERE, ORDER,
 #' LIMIT and so statements
 #'
-#' @examples options <- "WHERE anio=2017 AND cast(newid as integer) < 500000000
-#' @examples AND cveent='29' AND cddependencia='20' GROUP BY cdbeneficio, newid"
+#' @examples options <- "WHERE anio=2017 AND cast(newid as integer) < 500000000 AND cveent='29' AND cddependencia='20' GROUP BY cdbeneficio, newid"
 #' @examples c(dinero_programa, all_values) <- box_payment(con, the_queries, options=options)
 #' @export
 box_payment <- function(connection,dict,options=""){
