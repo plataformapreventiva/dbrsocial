@@ -36,6 +36,12 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
     query <- paste0(the_query1,columns," ",the_from," ",options,the_query2)
     c(the_df,dict) := load_or_run(connection,query,dict)
 
+    if (to_join=="estados"){
+        the_df$cveent <- as.integer(the_df$cveent)
+    } else if (to_join=="beneficios"){
+    the_df$nbbeneficio[is.na(the_df$nbbeneficio)] <- as.character(the_df$cdbeneficio[is.na(the_df$nbbeneficio)])
+}
+
     the_df <- the_df %>%
     dplyr::left_join(joinner)
     the_df$outliers <- gsub('\\[|\\]','',the_df$outliers) %>%
@@ -43,12 +49,6 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
     the_df$outliers <- lapply(the_df$outliers,as.integer)
     the_df$max[is.na(the_df$max)] <- the_df$q3[is.na(the_df$max)]
     the_df$min[is.na(the_df$min)] <- the_df$q1[is.na(the_df$min)]
-
-    if (to_join=="estados"){
-        the_df$cveent <- as.integer(the_df$cveent)
-    } else if (to_join=="beneficios"){
-    the_df$nbbeneficio[is.na(the_df$nbbeneficio)] <- as.character(the_df$cdbeneficio[is.na(the_df$nbbeneficio)])
-}
 
     the_df <- the_df[!is.na(the_df$media),]
     all_values <- tidyr::unnest(the_df,outliers)
