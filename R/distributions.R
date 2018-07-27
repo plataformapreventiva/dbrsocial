@@ -31,7 +31,9 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
         the_query2 <- sprintf(the_query2,"cdbeneficio","cdbeneficio","cdbeneficio","cdbeneficio")
         joinner <- csv_s3()
         colnames(joinner) <- c("cdbeneficio","nbbeneficio")
-}
+    } else if (to_join=="programa"){
+        the_query2 <- sprintf(the_query2,"cdprograma","cdprograma","cdprograma","cdprograma")
+    }
 
     query <- paste0(the_query1,columns," ",the_from," ",options,the_query2)
     c(the_df,dict) := load_or_run(connection,query,dict)
@@ -42,8 +44,10 @@ box_payment <- function(connection,dict,columns="numespago, cdbeneficio, newid, 
     the_df$nbbeneficio[is.na(the_df$nbbeneficio)] <- as.character(the_df$cdbeneficio[is.na(the_df$nbbeneficio)])
 }
 
-    the_df <- the_df %>%
-    dplyr::left_join(joinner)
+    if (to_join != "programa"){
+        the_df <- the_df %>%
+        dplyr::left_join(joinner)
+    }
     the_df$outliers <- gsub('\\[|\\]','',the_df$outliers) %>%
     strsplit(., split=", ")
     the_df$outliers <- lapply(the_df$outliers,as.integer)
